@@ -15,7 +15,7 @@ BLUE = (0, 0, 255)
 BLACK = (0, 0, 0)
 
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
-pygame.display.set_caption("Connect Four")
+pygame.display.set_caption("Fourplay")
 
 def draw_board(board):
     for c in range(7):
