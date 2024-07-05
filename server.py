@@ -76,5 +76,6 @@ def start_server():
         player = len(clients) - 1
         thread = threading.Thread(target=handle_client, args=(conn, player))
         thread.start()
+        
 
 start_server()
