@@ -17,7 +17,12 @@ BLACK = (0, 0, 0)
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Fourplay")
 
+font = pygame.font.sysFont("monospace", 40)
+
 def draw_board(board):
+    screen.fill(BLACK)
+    pygame.draw.rect(screen, BLACK, (0,0,WIDTH,SQUARESIZE))
+
     for c in range(7):
         for r in range(6):
             pygame.draw.rect(screen, BLUE, (c * SQUARESIZE, r * SQUARESIZE + SQUARESIZE, SQUARESIZE, SQUARESIZE))
@@ -43,23 +48,34 @@ symbol = ''
 winner = False
 
 def receive_messages():
-    global my_turn, symbol, winner
+    global my_turn, symbol, winner, color
     while True:
         try:
+            #receive message from server
             message = client.recv(1024).decode()
-            if message.startswith('WIN:'):
-                winner = True
-                if message[4:] == symbol:
-                    print("You win!")
+            if message -- 'R' or message == 'Y':
+                symbol =message
+                color = 'Red' if symbol =='R' else 'Yellow'
+                my_turn = (symbol =='R')
+                if my_turn:
+                    display_message("It is your turn ("+ color + ")")
                 else:
-                    print("You lose!")
-                pygame.quit()
-                sys.exit()
-            if message == 'R' or message == 'Y':
-                symbol = message
-                if symbol == 'R':
-                    my_turn = True
+                    display_message("Waiting for opponent turn")
             else:
+                if message.startswith('WIN:'):
+                    player_symbol, col = message[4:].split(':')
+                    col = int(col)
+                    for row in range(5, -1, -1):
+                        if board[row][col] == ' ':
+                            board[row][col] = player_symbol
+                            break
+                    winner = True
+                    if player_symbol == symbol:
+                        display_message("You win!")
+                    else:
+                        display_message("You lose!")
+                    pygame.quit()
+                    sys.exit()
                 player_symbol, col = message.split(':')
                 col = int(col)
                 for row in range(5, -1, -1):
@@ -69,6 +85,9 @@ def receive_messages():
                 draw_board(board)
                 if player_symbol != symbol:
                     my_turn = True
+                    display_message("It is your turn ("+ color +")")
+                else:
+                    display_message("Waiting for opponent turn")
         except Exception as e:
             print(f"Error: {e}")
             client.close()
