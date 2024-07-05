@@ -3,8 +3,7 @@ import threading
 import pygame
 import sys
 
-# Pygame setup
-pygame.init()
+
 
 WIDTH, HEIGHT = 700, 600
 SQUARESIZE = 100
@@ -116,9 +115,4 @@ while True:
                 pygame.draw.circle(screen, YELLOW, (posx, int(SQUARESIZE / 2)), RADIUS)
         pygame.display.update()
 
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            if my_turn and not winner:
-                posx = event.pos[0]
-                col = int(posx // SQUARESIZE)
-                send_move(col)
-                my_turn = False
+       
